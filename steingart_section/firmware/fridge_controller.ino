@@ -94,15 +94,15 @@ void stater(int i)
 }
 
 
-int set_state(String potter)
+int set_state(String hotcold)
 {
   //turn thermostat stetting off
   thermostat_mode = false;
   
   
   //just run hot or cold
-  stater(potter.toInt());
-  return potter.toInt();
+  stater(hotcold.toInt());
+  return hotcold.toInt();
 }
 
 int set_temp(String potter)
