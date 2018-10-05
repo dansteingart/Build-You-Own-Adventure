@@ -1,14 +1,19 @@
 // This #include statement was automatically added by the Particle IDE.
+#include <Adafruit_MAX31855.h>
 #include <math.h>
-#include "Adafruit_MAX31855.h"
 
 char publishString[200]; //a place holer for the publish string
 int state = 0;
 
 //Pin Defintion for SPI Interface MAX31855K
 int thermoCLK = D2;
-int thermoCS = D1;
-int thermoDO = D0;
+int thermoCS  = D1;
+int thermoDO  = D0;
+
+
+//For thermostat settings
+double set_point = 0;
+bool thermostat_mode = false; 
 
 //Instantiate the Thermocouple Reader
 Adafruit_MAX31855 TC(thermoCLK, thermoCS, thermoDO);
@@ -20,6 +25,8 @@ unsigned long sendTime;
 
 void setup() {
     Particle.function("set_state", set_state);
+    Particle.function("set_temp",  set_temp);
+    Particle.variable("set_point",set_point);
     sendTime = millis();
     for (int i = 3; i<8;i++) pinMode(i,OUTPUT);
     RGB.control(true);
@@ -32,16 +39,24 @@ void loop()
 {
     if (millis() - sendTime > 1000)
     {
-
       digitalWrite(7,HIGH);
       float TI = TC.readInternal();
       float TO = TC.readCelsius();
-      sprintf(publishString,"{\"state\":%d,\"TI\":%f,\"TO\":%f}",state,TI,TO);
+      sprintf(publishString,"{\"state\":%d,\"TI\":%f,\"TO\":%f,\"set_point\":%f,\"thermostat\":%d}",state,TI,TO,set_point,thermostat_mode);
       Particle.publish("MAE_519_LAB_1",publishString);
       sendTime = millis();
       delay(50);
       digitalWrite(7,LOW);
+      if (thermostat_mode == true) thermostat_control();
+      
     }
+}
+
+
+void thermostat_control()
+{
+    //code here for thermostat
+    
 }
 
 
@@ -78,8 +93,24 @@ void stater(int i)
     state = i;
 }
 
+
 int set_state(String potter)
 {
+  //turn thermostat stetting off
+  thermostat_mode = false;
+  
+  
+  //just run hot or cold
   stater(potter.toInt());
   return potter.toInt();
 }
+
+int set_temp(String potter)
+{
+  stater(0); //turn fridge off
+  
+  set_point = potter.toFloat();
+  thermostat_mode = true; //turn thermostat mode on;
+  return potter.toInt();
+}
+
