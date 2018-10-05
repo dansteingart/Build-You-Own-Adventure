@@ -47,8 +47,8 @@ while True:
     except Exception as E:
         print "Data error: try",E 
 
-   #if we have an error, we wait five seconds and then restablish the steaming https connection.     
-   time.sleep(5)
+#if we have an error, we wait five seconds and then restablish the steaming https connection.     
+time.sleep(5)
 
 
 
