@@ -13,7 +13,7 @@ client = mc(mip,27017)
 cores = {}
 
 ac = "" #->Get you token for this from Particle Build
-get_event = "BYOA" #this is the event we declared in "particle.publish"
+get_event = "BOYA_fridge" #this is the event we declared in "particle.publish"
 
 while True:
     try:
