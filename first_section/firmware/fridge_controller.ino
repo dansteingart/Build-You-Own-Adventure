@@ -43,7 +43,7 @@ void loop()
       float TI = TC.readInternal();
       float TO = TC.readCelsius();
       sprintf(publishString,"{\"state\":%d,\"TI\":%f,\"TO\":%f,\"set_point\":%f,\"thermostat\":%d}",state,TI,TO,set_point,thermostat_mode);
-      Particle.publish("BYOA",publishString);
+      Particle.publish("BOYA_fridge",publishString);
       sendTime = millis();
       delay(50);
       digitalWrite(7,LOW);
